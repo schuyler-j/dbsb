@@ -1,5 +1,17 @@
-const Discord = require('discord.js');
-const client = new Discord.Client();
+const { Client, GatewayIntentBits, Discord } = require('discord.js');
+
+secret = require("./secret.js");
+
+/*const myIntents = new Intents();
+
+myIntents.add(2048);
+old app?!?!?
+*/
+
+const client = new Client(
+	{intents: [GatewayIntentBits.Guilds]}
+);
+
 
 client.on('ready', () => {
 	console.log(`Logged in as ${client.user.tag}`);
