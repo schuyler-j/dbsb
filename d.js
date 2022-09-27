@@ -19,7 +19,7 @@ client.on('ready', () => {
 
 client.on('message', msg => {
 	if(msg.content === 'hello') {
-		msg.reply('Squawk');
+		msg.reply('squawk:');
 	}
 });
 
