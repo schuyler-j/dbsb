@@ -11,24 +11,14 @@ const commands = [
 	},
 	{
 		name: 'pulls',
-		description: 'list pull active request'
+		description: 'list active pull request'
 	}
 ];
 
 const octokit = new Octokit({auth: process.env.gitToken});
 
-(async () => {
-	console.log("hi");
-	try{
-		const git = await octokit.request('GET /repos/{owner}/{repo}/pulls',  {
-			owner: 'lefth-nd',
-			repo: 'Rohan'
-		})
-		console.log(git);
-	}catch (error){
-		console.error(error);
-	}
-})();
+
+
 
 const rest = new REST({ version :'10' }).setToken(secret.key);
 
@@ -52,7 +42,29 @@ const client = new Client(
 		GatewayIntentBits.GuildMessageReactions
 	]}
 );
+(async () => {
+	try{
+		const getpull =  await octokit.request('GET /repos/{owner}/{repo}/pulls',  {
+			owner: 'lefth-nd',
+			repo: 'Rohan'
+		})
 
+		client.on('interactionCreate', async interaction => {
+			if(!interaction.isChatInputCommand()) return;
+
+			if(interaction.commandName === 'pulls'){
+				interaction.reply("New Pull Request: " + getpull.data[0].html_url);
+				console.log(getpull);
+			}
+		});
+
+
+	}catch (error){
+		console.error(error);
+	}
+
+
+})();
 
 client.on('ready', async () => {
 	console.log(`Logged in as ${client.user.tag}`);
@@ -70,7 +82,7 @@ client.on('messageCreate', async msg => {
 		message.react('😄');
 		console.log('got it');
 	}else if(message.author.username === 'skazz'){
-		msg.reply('squawk');
+		msg.reply('squawk!');
 		msg.channel.send('say the magic word');
 		console.log('nope');
 		msg.react('😡');
