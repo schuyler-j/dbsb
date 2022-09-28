@@ -24,7 +24,12 @@ const rest = new REST({ version :'10' }).setToken(secret.key);
 })();
 
 const client = new Client(
-	{intents: [GatewayIntentBits.Guilds, GatewayIntentBits.GuildMessages, GatewayIntentBits.MessageContent, GatewayIntentBits.GuildMessageReactions]}
+	{intents: [
+		GatewayIntentBits.Guilds, 
+		GatewayIntentBits.GuildMessages, 
+		GatewayIntentBits.MessageContent, 
+		GatewayIntentBits.GuildMessageReactions
+	]}
 );
 
 
