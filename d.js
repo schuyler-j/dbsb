@@ -9,6 +9,10 @@ const commands = [
 		name: 'test',
 		description: 'testing',
 	},
+	{
+		name: 'pulls',
+		description: 'list pull active request'
+	}
 ];
 
 const octokit = new Octokit({auth: process.env.gitToken});
