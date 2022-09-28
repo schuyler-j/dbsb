@@ -10,6 +10,7 @@ const commands = [
 		description: 'testing',
 	},
 ];
+
 const octokit = new Octokit({auth: process.env.gitToken});
 
 (async () => {
@@ -71,13 +72,6 @@ client.on('messageCreate', async msg => {
 		msg.react('😡');
 	}
 });
-
-/*hmm>?
-console.log(msg.author.id);
-client.on('typingStart', (channel, user) => {
-	console.log("hi");
-})
-*/
 
 client.on('typingStart', (channel, user) => {
 	console.log("hi");
