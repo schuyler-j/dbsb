@@ -1,4 +1,6 @@
 const { Client, GatewayIntentBits, Discord, REST, Routes } = require('discord.js');
+const { Octokit } = require('octokit');
+require('dotenv').config()
 const { channel } = require('node:diagnostics_channel');
 const wait = require('node:timers/promises').setTimeout;
 secret = require("./secret.js");
@@ -8,6 +10,20 @@ const commands = [
 		description: 'testing',
 	},
 ];
+const octokit = new Octokit({auth: process.env.gitToken});
+
+(async () => {
+	console.log("hi");
+	try{
+		const git = await octokit.request('GET /repos/{owner}/{repo}/pulls',  {
+			owner: 'lefth-nd',
+			repo: 'Rohan'
+		})
+		console.log(git);
+	}catch (error){
+		console.error(error);
+	}
+})();
 
 const rest = new REST({ version :'10' }).setToken(secret.key);
 
