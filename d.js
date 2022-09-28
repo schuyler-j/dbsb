@@ -41,10 +41,11 @@ client.on('messageCreate', async msg => {
 	console.log(msg.content);
 
 	if(message.author.username === 'skazz' && message.content === 'hello') {
-		msg.reply('squawk');
 		message.react('😄');
 		console.log('got it');
 	}else if(message.author.username === 'skazz'){
+		msg.reply('squawk');
+		msg.channel.send('say the magic word');
 		console.log('nope');
 		msg.react('😡');
 	}
