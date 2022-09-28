@@ -37,6 +37,9 @@ client.on('messageCreate', async msg => {
 	const channel = guild.channels.cache.get(secret.CHANNEL_ID);
 	const message = await channel.lastMessage;
 
+	/*simplify later*/
+	console.log(msg.content);
+
 	if(message.author.username === 'skazz' && message.content === 'hello') {
 		msg.reply('squawk');
 		message.react('😄');
