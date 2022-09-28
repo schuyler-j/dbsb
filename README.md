@@ -1,4 +1,5 @@
 # dbsb
 discord
 
-![tp8](https://user-images.githubusercontent.com/74050386/192532175-f4eb66ea-394c-403b-914c-8da6fa1c2be6.png)
+
+![tp8](https://user-images.githubusercontent.com/74050386/192673457-e00a2ad6-7de7-4d14-b445-47b540d3c798.png)
