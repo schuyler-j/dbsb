@@ -33,15 +33,15 @@ client.on('ready', async () => {
 });
 
 client.on('messageCreate', async msg => {
-	const guild = await client.guilds.fetch('838955470903312386');
-	const channel = guild.channels.cache.get('1022776585008451625');
+	const guild = await client.guilds.fetch(secret.GUILD_ID);
+	const channel = guild.channels.cache.get(secret.CHANNEL_ID);
 	const message = await channel.lastMessage;
 
-	if(message.content === 'hello') {
+	if(message.author.username === 'skazz' && message.content === 'hello') {
 		msg.reply('squawk');
 		message.react('😄');
 		console.log('got it');
-	}else{
+	}else if(message.author.username === 'skazz'){
 		console.log('nope');
 		msg.react('😡');
 	}
