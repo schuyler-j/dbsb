@@ -33,38 +33,16 @@ const rest = new REST({ version :'10' }).setToken(secret.key);
 		console.error(error);
 	}
 })();
-
 const client = new Client(
 	{intents: [
 		GatewayIntentBits.Guilds, 
 		GatewayIntentBits.GuildMessages, 
 		GatewayIntentBits.MessageContent, 
-		GatewayIntentBits.GuildMessageReactions
+		GatewayIntentBits.GuildMessageReactions,
+		GatewayIntentBits.GuildMembers,
+		GatewayIntentBits.GuildWebhooks
 	]}
 );
-(async () => {
-	try{
-		const getpull =  await octokit.request('GET /repos/{owner}/{repo}/pulls',  {
-			owner: 'lefth-nd',
-			repo: 'Rohan'
-		})
-
-		client.on('interactionCreate', async interaction => {
-			if(!interaction.isChatInputCommand()) return;
-
-			if(interaction.commandName === 'pulls'){
-				interaction.reply("New Pull Request: " + getpull.data[0].html_url);
-				console.log(getpull);
-			}
-		});
-
-
-	}catch (error){
-		console.error(error);
-	}
-
-
-})();
 
 client.on('ready', async () => {
 	console.log(`Logged in as ${client.user.tag}`);
@@ -102,6 +80,29 @@ client.on('interactionCreate', async interaction => {
 		message.react('😄');
 		message.channel.send("OKAY");
 	}
+
+	if(interaction.commandName === 'pulls'){
+		(async () => {
+			try{
+				const getpull =  await octokit.request('GET /repos/{owner}/{repo}/pulls',  {
+					owner: 'lefth-nd',
+					repo: 'Rohan'
+				})
+				interaction.reply("New Pull Request: " + getpull.data[0].title);
+				interaction.channel.send("URL: " + getpull.data[0].html_url)
+				console.log(getpull);
+			}catch (error){
+				console.error(error);
+			}
+
+
+		})();
+
+
+	}
+
+
+
 });
 
 client.login(secret.key);
