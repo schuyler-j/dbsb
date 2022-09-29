@@ -15,10 +15,17 @@ const commands = [
 	}
 ];
 
+const timey = {
+	m5: 300000,
+	m10: 600000,
+	m15: 900000,
+	m20: 1200000,
+	m25: 1500000,
+	m30: 1800000,
+	m1: 1000
+}
+
 const octokit = new Octokit({auth: process.env.gitToken});
-
-
-
 
 const rest = new REST({ version :'10' }).setToken(secret.key);
 
@@ -53,7 +60,9 @@ client.on('ready', async () => {
 	const channel = guild.channels.cache.get(secret.CHANNEL_ID);
 	const message = await channel.messages;
 
+	/* this is annoying
 	message.channel.send("Hi! I'm Squawk! ```/pulls (to see latest pull request)``` ");
+	*/
 
 });
 
@@ -74,6 +83,8 @@ client.on('messageCreate', async msg => {
 		msg.reply('squawk!');
 		msg.channel.send('say the magic word');
 		msg.react('😡');
+		wait(300000);
+		msg.channel.send('1sec');
 	}
 	
 	if(message.content === 'be quiet'){
