@@ -49,6 +49,12 @@ const client = new Client(
 client.on('ready', async () => {
 	console.log(`Logged in as ${client.user.tag}`);
 
+	const guild = await client.guilds.fetch(secret.GUILD_ID);
+	const channel = guild.channels.cache.get(secret.CHANNEL_ID);
+	const message = await channel.messages;
+
+	message.channel.send("Hi! I'm Squawk! ```/pulls (to see latest pull request)``` ");
+
 });
 
 be_quiet = false;
