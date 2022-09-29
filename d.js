@@ -44,10 +44,14 @@ const client = new Client(
 	]}
 );
 
+
+
 client.on('ready', async () => {
 	console.log(`Logged in as ${client.user.tag}`);
+
 });
 
+be_quiet = false;
 client.on('messageCreate', async msg => {
 	const guild = await client.guilds.fetch(secret.GUILD_ID);
 	const channel = guild.channels.cache.get(secret.CHANNEL_ID);
@@ -56,14 +60,19 @@ client.on('messageCreate', async msg => {
 	/*simplify later*/
 	console.log(msg.content);
 
-	if(message.author.username === 'skazz' && message.content === 'hello') {
+	var user = 'skazz';
+
+	if(message.author.username === user && message.content === 'squawk' && !be_quiet) {
 		message.react('😄');
-		console.log('got it');
-	}else if(message.author.username === 'skazz'){
+	}else if(message.author.username === user && !be_quiet && message.content != 'be quiet'){
 		msg.reply('squawk!');
 		msg.channel.send('say the magic word');
-		console.log('nope');
 		msg.react('😡');
+	}
+	
+	if(message.content === 'be quiet'){
+		msg.channel.send('Okay!');
+		be_quiet = true;
 	}
 });
 
@@ -88,9 +97,13 @@ client.on('interactionCreate', async interaction => {
 					owner: 'lefth-nd',
 					repo: 'Rohan'
 				})
-				interaction.reply("New Pull Request: " + getpull.data[0].title);
-				interaction.channel.send("URL: " + getpull.data[0].html_url)
-				console.log(getpull);
+				if(getpull.data.length != 0){
+					interaction.reply("New Pull Request: " + getpull.data[0].title);
+					interaction.channel.send("URL: " + getpull.data[0].html_url)
+					console.log(getpull);
+				}else{
+					interaction.channel.send("No Open Pull Requests")
+				}
 			}catch (error){
 				console.error(error);
 			}
