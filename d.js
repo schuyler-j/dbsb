@@ -51,8 +51,6 @@ const client = new Client(
 	]}
 );
 
-
-
 client.on('ready', async () => {
 	console.log(`Logged in as ${client.user.tag}`);
 
@@ -73,7 +71,7 @@ client.on('messageCreate', async msg => {
 	const message = await channel.lastMessage;
 
 	/*simplify later*/
-	console.log(msg.content);
+	//console.log(msg.content);
 
 	var user = 'skazz';
 
@@ -93,11 +91,20 @@ client.on('messageCreate', async msg => {
 	}
 });
 
+/*TODO explore this later
 client.on('typingStart', (channel, user) => {
 	console.log("hi");
 });
+*/
 
 client.on('interactionCreate', async interaction => {
+    const guild = await client.guilds.fetch(secret.GUILD_ID);
+    const channel = guild.channels.cache.get(secret.CHANNEL_ID);
+    const message = await channel.lastMessage;
+
+    const args = message.content.slice(prefix.length).trim().split(' ');
+
+
 	if(!interaction.isChatInputCommand()) return;
 
 	if(interaction.commandName === 'test') {
@@ -106,6 +113,10 @@ client.on('interactionCreate', async interaction => {
 		message.react('😄');
 		message.channel.send("OKAY");
 	}
+
+    if(interaction.commandName === 'hi'){
+        interaction.channel.send(`Your arg: ${args[0]}`);
+    }
 
 	if(interaction.commandName === 'pulls'){
 		(async () => {
@@ -124,15 +135,7 @@ client.on('interactionCreate', async interaction => {
 			}catch (error){
 				console.error(error);
 			}
-
-
 		})();
-
-
 	}
-
-
-
 });
-
 client.login(secret.key);
