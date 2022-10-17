@@ -12,7 +12,11 @@ const commands = [
 	{
 		name: 'pulls',
 		description: 'list active pull request'
-	}
+	},
+    {
+        name: 'arg',
+        description: 'list args'
+    },
 ];
 
 const timey = {
@@ -54,9 +58,9 @@ const client = new Client(
 client.on('ready', async () => {
 	console.log(`Logged in as ${client.user.tag}`);
 
-	const guild = await client.guilds.fetch(secret.GUILD_ID);
-	const channel = guild.channels.cache.get(secret.CHANNEL_ID);
-	const message = await channel.messages;
+	//const guild = await client.guilds.fetch(secret.GUILD_ID);
+	//const channel = guild.channels.cache.get(secret.CHANNEL_ID);
+	//const message = await channel.messages;
 
 	/* this is annoying
 	message.channel.send("Hi! I'm Squawk! ```/pulls (to see latest pull request)``` ");
@@ -64,14 +68,39 @@ client.on('ready', async () => {
 
 });
 
-be_quiet = false;
+/*cos debugging*/
+be_quiet = true;
 client.on('messageCreate', async msg => {
 	const guild = await client.guilds.fetch(secret.GUILD_ID);
 	const channel = guild.channels.cache.get(secret.CHANNEL_ID);
 	const message = await channel.lastMessage;
 
+    const prefix = "!";
+
 	/*simplify later*/
 	//console.log(msg.content);
+
+    if(message.content.startsWith(prefix)){
+        const args = message.content.slice(prefix.length).trim().split(' ');
+        const command = args.shift().toLowerCase();
+        if(command === 'arg'){
+            message.channel.send(`Your arg: ${args[0]}`);
+        }
+
+        if(command === 'timer'){
+            if(args[0] === '?'){
+                message.channel.send(`Timer Help Menu:`);
+                message.channel.send(`example: !timer 5m`);
+                message.channel.send(`sets timer for 5 minutes`);
+            }
+            if(args[0].match(/[1-9]m/)){
+                message.channel.send(`Timer set for ${args[0]}`);
+                wait(300000);
+                message.channel.send(`Times Up!`);
+            }
+        }
+
+    }
 
 	var user = 'skazz';
 
@@ -91,6 +120,7 @@ client.on('messageCreate', async msg => {
 	}
 });
 
+
 /*TODO explore this later
 client.on('typingStart', (channel, user) => {
 	console.log("hi");
@@ -102,7 +132,7 @@ client.on('interactionCreate', async interaction => {
     const channel = guild.channels.cache.get(secret.CHANNEL_ID);
     const message = await channel.lastMessage;
 
-    const args = message.content.slice(prefix.length).trim().split(' ');
+    //const args = message.content.slice(prefix.length).trim().split(' ');
 
 
 	if(!interaction.isChatInputCommand()) return;
@@ -112,10 +142,11 @@ client.on('interactionCreate', async interaction => {
 		const message = await interaction.fetchReply();
 		message.react('😄');
 		message.channel.send("OKAY");
+
 	}
 
-    if(interaction.commandName === 'hi'){
-        interaction.channel.send(`Your arg: ${args[0]}`);
+    if(interaction.commandName === 'arg'){
+        interaction.channel.send("arguments");
     }
 
 	if(interaction.commandName === 'pulls'){
@@ -130,7 +161,7 @@ client.on('interactionCreate', async interaction => {
 					interaction.channel.send("URL: " + getpull.data[0].html_url)
 					console.log(getpull);
 				}else{
-					interaction.channel.send("No Open Pull Requests")
+					interaction.channel.send("No Open PULL Requests")
 				}
 			}catch (error){
 				console.error(error);
