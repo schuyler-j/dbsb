@@ -20,13 +20,13 @@ const commands = [
 ];
 
 const timey = {
-	m5: 300000,
-	m10: 600000,
-	m15: 900000,
-	m20: 1200000,
-	m25: 1500000,
-	m30: 1800000,
-	m1: 1000
+	m5m: 300000,
+	m10m: 600000,
+	m15m: 900000,
+	m20m: 1200000,
+	m25m: 1500000,
+	m30m: 1800000,
+	m1m: 60000
 }
 
 const octokit = new Octokit({auth: process.env.gitToken});
@@ -94,15 +94,19 @@ client.on('messageCreate', async msg => {
                 message.channel.send(`sets timer for 5 minutes`);
             }
             if(args[0].match(/[1-9]m/)){
+				let prefix = "m"; //dictionary prefix
                 message.channel.send(`Timer set for ${args[0]}`);
-                wait(300000);
-                message.channel.send(`Times Up!`);
+				setTimeout(timerFinished, timey[prefix.concat(args[0])]);
             }
+
+			function timerFinished() {
+                message.channel.send(`Times Up!`);
+			}
         }
 
     }
 
-	var user = 'skazz';
+	var user = 'skazz'; //username
 
 	if(message.author.username === user && message.content === 'squawk' && !be_quiet) {
 		message.react('😄');
@@ -110,8 +114,6 @@ client.on('messageCreate', async msg => {
 		msg.reply('squawk!');
 		msg.channel.send('say the magic word');
 		msg.react('😡');
-		wait(300000);
-		msg.channel.send('1sec');
 	}
 	
 	if(message.content === 'be quiet'){
