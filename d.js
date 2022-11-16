@@ -4,6 +4,9 @@ require('dotenv').config()
 const { channel } = require('node:diagnostics_channel');
 const wait = require('node:timers/promises').setTimeout;
 secret = require("./secret.js");
+
+var XMLHttpRequest = require("xmlhttprequest").XMLHttpRequest;
+
 const commands = [
 	{
 		name: 'test',
@@ -62,7 +65,7 @@ client.on('ready', async () => {
 	//const channel = guild.channels.cache.get(secret.CHANNEL_ID);
 	//const message = await channel.messages;
 
-	/* this is annoying
+	/* this is annoying - bot intro welcome msg
 	message.channel.send("Hi! I'm Squawk! ```/pulls (to see latest pull request)``` ");
 	*/
 
@@ -71,6 +74,7 @@ client.on('ready', async () => {
 /*cos debugging*/
 be_quiet = true;
 client.on('messageCreate', async msg => {
+
 	const guild = await client.guilds.fetch(secret.GUILD_ID);
 	const channel = guild.channels.cache.get(secret.CHANNEL_ID);
 	const message = await channel.lastMessage;
@@ -83,7 +87,7 @@ client.on('messageCreate', async msg => {
     if(message.content.startsWith(prefix)){
         const args = message.content.slice(prefix.length).trim().split(' ');
         const command = args.shift().toLowerCase();
-        if(command === 'arg'){
+        if(command === 'argtest'){
             message.channel.send(`Your arg: ${args[0]}`);
         }
 
@@ -94,9 +98,9 @@ client.on('messageCreate', async msg => {
                 message.channel.send(`sets timer for 5 minutes`);
             }
             if(args[0].match(/[1-9]m/)){
-				let prefix = "m"; //dictionary prefix
+				let prefix_ = "m"; //dictionary prefix
                 message.channel.send(`Timer set for ${args[0]}`);
-				setTimeout(timerFinished, timey[prefix.concat(args[0])]);
+				setTimeout(timerFinished, timey[prefix_.concat(args[0])]);
             }
 
 			function timerFinished() {
@@ -104,7 +108,25 @@ client.on('messageCreate', async msg => {
 			}
         }
 
+		if(command === 'wiki'){
+			const xhr = new XMLHttpRequest()
+			xhr.open("GET", "https://en.wikipedia.org/wiki/Special:Random")
+			xhr.send()
+
+			xhr.onload = function() {
+				if (xhr.status === 200) {
+					console.log(xhr.responseText);
+			}else if(xhr.status === 404) {
+				console.log("NULLLL");
+
+			}
+
+		}
+		}
+
     }
+
+	//for testing msg reply
 
 	var user = 'skazz'; //username
 
@@ -135,7 +157,6 @@ client.on('interactionCreate', async interaction => {
     const message = await channel.lastMessage;
 
     //const args = message.content.slice(prefix.length).trim().split(' ');
-
 
 	if(!interaction.isChatInputCommand()) return;
 
