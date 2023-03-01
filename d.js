@@ -1,9 +1,10 @@
 const { Client, GatewayIntentBits, Discord, REST, Routes } = require('discord.js');
 const { Octokit } = require('octokit');
-require('dotenv').config()
 const { channel } = require('node:diagnostics_channel');
 const wait = require('node:timers/promises').setTimeout;
+const { SlashCommandBuilder } = require('@discordjs/builders');
 secret = require("./secret.js");
+require('dotenv').config()
 
 var XMLHttpRequest = require("xmlhttprequest").XMLHttpRequest;
 
@@ -20,8 +21,13 @@ const commands = [
         name: 'arg',
         description: 'list args'
     },
+	{
+		name: 'gist',
+		description: 'list your github gists'
+	},
 ];
 
+//is this the best way to do this?
 const timey = {
 	m5m: 300000,
 	m10m: 600000,
@@ -47,6 +53,7 @@ const rest = new REST({ version :'10' }).setToken(secret.key);
 		console.error(error);
 	}
 })();
+
 const client = new Client(
 	{intents: [
 		GatewayIntentBits.Guilds, 
@@ -73,6 +80,7 @@ client.on('ready', async () => {
 
 /*cos debugging*/
 be_quiet = true;
+
 client.on('messageCreate', async msg => {
 
 	const guild = await client.guilds.fetch(secret.GUILD_ID);
@@ -108,6 +116,7 @@ client.on('messageCreate', async msg => {
 			}
         }
 
+		/*	old test
 		if(command === 'wiki'){
 			const xhr = new XMLHttpRequest()
 			xhr.open("GET", "https://en.wikipedia.org/wiki/Special:Random")
@@ -122,9 +131,47 @@ client.on('messageCreate', async msg => {
 			}
 
 		}
-		}
+		}*/
 
-    }
+
+		if(command === 'chat'){
+			const args = message.content.slice(prefix.length).trim().split(' ');
+			const prompts = args.slice(1)
+			const hello = prompts.join(" ")
+
+			var api_key = secret.OPENAPIKEY
+			var address = "https://api.openai.com/v1/completions" 
+
+			var str = `${address} -H "Content-Type: application/json" -H "Authorization: Bearer ${api_key}" -d '{"model": "text-davinci-003", "prompt": "${prompts}", "temperature": 0, "max_tokens": 360}'`
+			const requestData = {
+				model: 'text-davinci-003',
+				prompt: hello,
+				temperature: 0,
+				max_tokens: 360
+			};
+
+
+
+
+
+
+			(async () => {
+				const res = await fetch(address, {
+					method: 'POST',
+					headers: {
+						'Content-Type': 'application/json',
+						'Authorization': 'Bearer ' + api_key
+					},
+					body: JSON.stringify(requestData)
+				})
+				//const res = await fetch("https://www.google.com")
+				const answer = await res.json()
+				const reply = answer.choices[0].text
+				msg.channel.send(reply)
+
+			})()
+		}
+	}
 
 	//for testing msg reply
 
@@ -157,6 +204,15 @@ client.on('interactionCreate', async interaction => {
     const message = await channel.lastMessage;
 
     //const args = message.content.slice(prefix.length).trim().split(' ');
+	//
+	
+	const data = new SlashCommandBuilder()
+		.setName('echo')
+		.setDescription('Replies with your input')
+		.addStringOption(option =>
+			option.setName('input')
+				.setDescription('The input to echo')
+				.setRequired(true));
 
 	if(!interaction.isChatInputCommand()) return;
 
@@ -166,6 +222,12 @@ client.on('interactionCreate', async interaction => {
 		message.react('😄');
 		message.channel.send("OKAY");
 
+	}
+
+	if(interaction.commandName === 'gist'){
+		const gist = octokit.rest.gists.list();
+		console.log(gist);
+		interaction.channel.send("Here's the gist");
 	}
 
     if(interaction.commandName === 'arg'){
