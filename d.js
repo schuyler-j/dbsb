@@ -150,11 +150,6 @@ client.on('messageCreate', async msg => {
 				max_tokens: 360
 			};
 
-
-
-
-
-
 			(async () => {
 				const res = await fetch(address, {
 					method: 'POST',
