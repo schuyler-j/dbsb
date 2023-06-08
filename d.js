@@ -35,7 +35,7 @@ const timey = {
 	m20m: 1200000,
 	m25m: 1500000,
 	m30m: 1800000,
-	m1m: 60000
+	m1m: 60000  // for test
 }
 
 const octokit = new Octokit({auth: process.env.gitToken});
@@ -89,8 +89,9 @@ client.on('messageCreate', async msg => {
 
     const prefix = "!";
 
-	/*simplify later*/
-	//console.log(msg.content);
+	/* simplify later */
+
+	/* prefix commands using ! */
 
     if(message.content.startsWith(prefix)){
         const args = message.content.slice(prefix.length).trim().split(' ');
@@ -116,23 +117,7 @@ client.on('messageCreate', async msg => {
 			}
         }
 
-		/*	old test
-		if(command === 'wiki'){
-			const xhr = new XMLHttpRequest()
-			xhr.open("GET", "https://en.wikipedia.org/wiki/Special:Random")
-			xhr.send()
-
-			xhr.onload = function() {
-				if (xhr.status === 200) {
-					console.log(xhr.responseText);
-			}else if(xhr.status === 404) {
-				console.log("NULLLL");
-
-			}
-
-		}
-		}*/
-
+		/* chat bot thing */
 
 		if(command === 'chat'){
 			const args = message.content.slice(prefix.length).trim().split(' ');
@@ -199,7 +184,6 @@ client.on('interactionCreate', async interaction => {
     const message = await channel.lastMessage;
 
     //const args = message.content.slice(prefix.length).trim().split(' ');
-	//
 	
 	const data = new SlashCommandBuilder()
 		.setName('echo')
@@ -229,12 +213,14 @@ client.on('interactionCreate', async interaction => {
         interaction.channel.send("arguments");
     }
 
+	/* display pull requests */
+
 	if(interaction.commandName === 'pulls'){
 		(async () => {
 			try{
 				const getpull =  await octokit.request('GET /repos/{owner}/{repo}/pulls',  {
 					owner: 'lefth-nd',
-					repo: 'Rohan'
+					repo: 'Rohan'  // for test
 				})
 				if(getpull.data.length != 0){
 					interaction.reply("New Pull Request: " + getpull.data[0].title);
