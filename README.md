@@ -2,7 +2,7 @@
 
 ## discord bot
 
-timer,emojis,fetch,etc.
+chat,timer,emojis,fetch,etc.
 
 <img src="https://img.shields.io/github/repo-size/lefth-nd/dbsb" />
 <div align=center>
